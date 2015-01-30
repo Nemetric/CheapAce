@@ -1,0 +1,89 @@
+void setup()
+{
+	var AC3 = new AC3();
+
+	var Controller = new Controller();
+	Controller.Usb = &AC3.Usb;
+
+	var Lift = new Lift();
+	Lift.Left = &AC3.Left;
+	Lift.Right = &AC3.Right;
+
+	var Drive = new Drive();
+	Drive.Left = &AC3.Left;
+	Drive.Right = &AC3.Right;
+
+	var Intake = new Intake();
+	Intake.Motor = &AC3.IntakeServo;
+
+	var Claw = new Claw();
+	Claw.Motor = &AC3.ClawMotorServo;
+	Claw.Piston = &AC3.Piston;
+	
+	
+}
+
+void loop()
+{
+	ReadController();
+	ReadRobot();
+	WriteRobot();
+}
+
+void ReadController()
+{
+	//Map Controller Values to Libraries
+	Drive.LJoystick = Controller.LJoystick.val();
+	Drive.RJoystick = Controller.RJoystick.val();
+
+	Lift.RTrigger = Controller.RTrigger.val();
+	Lift.LTrigger = Controller.LTrigger.val();
+
+	Intake.RButton = Controller.RButton.val();
+	Intake.LButton = Controller.LButton.val();
+
+	Claw.DPadLeft = Controller.DPadLeft.val();
+	Claw.DPadRight = Controller.DPadRight.val();
+	Claw.DPadUp = Controller.DpadUp.val(); //compress
+}
+
+void ReadRobot()
+{
+	//Map Robot Values to Libraries
+	Drive.LEncoder = AC3.LEncoder.val();
+	Drive.REncoder = AC3.REncoder.val();
+
+	Lift.LEncoder = AC3.LEncoder.val();
+	Lift.REncoder = AC3.REncoder.val();
+	Lift.LLimit = AC3.LLimit.val();
+	Lift.RLimit = AC3.RLimit.val();
+	Lift.Distance = AC3.DistanceSensor.val();
+
+	Intake.Limit = AC3.IntLimit.val();
+}
+
+void WriteRobot()
+{
+	//Execute Library Functions
+	Lift.Exec();
+	Drive.Exec();
+	Intake.Exec();
+	Claw.Exec();
+	Controller.Exec();
+	AC3.Exec();
+}
+
+
+/*
+Drive
+ - Left
+    - Power
+    - Time
+    - Distance
+ - Right
+	- Power
+	- Time
+	- Distance
+ 
+
+*/
